@@ -1,7 +1,10 @@
 package com.christian.seyoum.ilovezappos
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -108,6 +111,32 @@ class AskBid : AppCompatActivity() {
             }
 
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        val inflater = menuInflater
+        inflater.inflate(R.menu.bid_ask_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId){
+            R.id.graph_menu -> {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.price_menu -> {
+                val intent = Intent(this,BitCoinPrice::class.java)
+                startActivity(intent)
+                return true
+            }
+
+            else -> return super.onOptionsItemSelected(item)
+        }
+
     }
 
 }

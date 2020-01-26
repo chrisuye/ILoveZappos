@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/ask_bid_menu"
-        android:title="Ask and Bid"
+        android:id="@+id/graph_menu"
+        android:title="Graph"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/price_menu"
-        android:title="Set Price Alert"
+        android:id="@+id/ask_bid_menu"
+        android:title="Ask and Bid"
         app:showAsAction="never"/>
 
 </menu>
