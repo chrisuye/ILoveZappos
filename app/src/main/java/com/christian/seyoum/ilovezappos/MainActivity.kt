@@ -42,44 +42,41 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response?.body()?.string()
                 println(body)
+
+
+
                 val yValue:ArrayList<Entry> = arrayListOf()
                 cryptoData = body.toString()
                 val jsonArray = JSONArray(cryptoData)
                 var i = 0
-
                 val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
                 var date = java.util.Date(1532358895 * 1000)
                 sdf.format(date)
-
-
-                runOnUiThread {
-                    while (i < jsonArray.length()){
-                        date = java.util.Date(jsonArray.getJSONObject(i).getString("date").toLong())
-                        yValue.add(Entry(jsonArray.getJSONObject(i).getString("date").toFloat()
-                            ,jsonArray.getJSONObject(i).getString("price").toFloat()))
-                        i++
-                    }
-                    yValue.reverse()
-
-                    println(cryptoData)
-
-                    val set = LineDataSet(yValue, "Date Set 1")
-
-                    set.fillAlpha = 0
-
-                    val dataset:ArrayList<ILineDataSet> = arrayListOf()
-
-                    dataset.add(set)
-
-                    val Data = LineData(dataset)
-
-                    graph.data = Data
+                while (i < jsonArray.length()){
+                    date = java.util.Date(jsonArray.getJSONObject(i).getString("date").toLong())
+                    yValue.add(Entry(jsonArray.getJSONObject(i).getString("date").toFloat()
+                        ,jsonArray.getJSONObject(i).getString("price").toFloat()))
+                    i++
                 }
+                yValue.reverse()
                 graph.isDragEnabled = true
                 graph.isScaleXEnabled = false
 
 
+                val set = LineDataSet(yValue, "Cryptocurrency Graph")
 
+                set.fillAlpha = 0
+
+                val dataset:ArrayList<ILineDataSet> = arrayListOf()
+
+                dataset.add(set)
+
+                val Data = LineData(dataset)
+
+                graph.data = Data
+
+                graph.notifyDataSetChanged()
+                graph.invalidate()
             }
 
         })

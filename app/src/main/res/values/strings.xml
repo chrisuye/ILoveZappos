@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ILoveZappos</string>
+    <string name="amount">Amount</string>
+    <string name="ask">Ask</string>
+    <string name="bid">Bid</string>
+    <string name="high">High = </string>
+    <string name="open">Open = </string>
+    <string name="last">Last = </string>
+    <string name="volume">Volume = </string>
+    <string name="vwap">Vwap = </string>
+    <string name="bid_view">Bid = </string>
+    <string name="ask_view">Ask = </string>
 </resources>
