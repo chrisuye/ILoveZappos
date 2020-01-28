@@ -15,7 +15,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".BitCoinPrice"></activity>
         <activity android:name=".AskBid" />
-        <activity android:name=".Ask_Bid" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

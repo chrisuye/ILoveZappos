@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#646060"
     tools:context=".MainActivity">
 
     <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/graph"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/graph"></com.github.mikephil.charting.charts.LineChart>
+        android:layout_height="match_parent"></com.github.mikephil.charting.charts.LineChart>
 
 
 </RelativeLayout>

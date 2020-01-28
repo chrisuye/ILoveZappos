@@ -10,4 +10,7 @@
     <string name="vwap">Vwap = </string>
     <string name="bid_view">Bid = </string>
     <string name="ask_view">Ask = </string>
+    <string name="low">Low = </string>
+    <string name="alarm">CREATE ALERT</string>
+    <string name="price_hint">Set Price</string>
 </resources>

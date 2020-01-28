@@ -16,7 +16,7 @@ import okhttp3.*
 import java.io.IOException
 
 class BitCoinPrice : AppCompatActivity(), IUserControl {
-    val jobId: Int = 1
+    private val jobId: Int = 1
     override lateinit var users:IUserRepo
 
     override fun add(user: User) {
@@ -39,6 +39,7 @@ class BitCoinPrice : AppCompatActivity(), IUserControl {
         val request = Request.Builder().url(url).build()
 
         val client = OkHttpClient()
+        val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
 
 
         client.newCall(request).enqueue(object : Callback {
@@ -130,12 +131,12 @@ class BitCoinPrice : AppCompatActivity(), IUserControl {
         val bundle = PersistableBundle()
 
         start_job.setOnClickListener {
+            scheduler.cancelAll()
             add(User(-1,price_in.text.toString()))
             bundle.putDouble("price",getUser()[getUser().size - 1].price.toDouble())
-            val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
             val jobInfo = JobInfo.Builder(jobId, ComponentName(this, MyJob::class.java))
-                .setMinimumLatency(5000)
-                .setPersisted(true)
+                .setMinimumLatency(0)
+                .setPersisted(false)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                 .setExtras(bundle)
                 .build()
@@ -143,6 +144,7 @@ class BitCoinPrice : AppCompatActivity(), IUserControl {
             if(success == JobScheduler.RESULT_SUCCESS) {
                 Toast.makeText(this, "Job scheduling succeeded", Toast.LENGTH_SHORT).show()
             }
+
         }
 
     }

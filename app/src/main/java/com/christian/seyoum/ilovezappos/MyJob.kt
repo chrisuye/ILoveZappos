@@ -21,6 +21,7 @@ class MyJob : JobService(){
     private val i = 0
 
     override fun onStopJob(job: JobParameters?): Boolean {
+        Toast.makeText(this, "Job stopped", Toast.LENGTH_SHORT).show()
         return false
     }
 
@@ -47,7 +48,6 @@ class MyJob : JobService(){
                     client.newCall(request).enqueue(object : Callback {
                         override fun onFailure(call: Call, e: IOException) {
                             println("network fail")
-                            //showNotification()
                         }
 
                         override fun onResponse(call: Call, response: Response) {
@@ -66,9 +66,9 @@ class MyJob : JobService(){
                             }
                             else {
                                 println("Price by user $p")
-                                if(price.toDouble() > p.toString().toDouble()){
+                                if(price.toDouble() < p.toString().toDouble()){
 
-                                    showNotification()
+                                    showNotification(price.toDouble())
 
 
                                 }
@@ -81,7 +81,7 @@ class MyJob : JobService(){
                     })
                 }
             } catch(e: Exception) {
-                // for when we get shut down...
+
             }
         }
         return false
@@ -96,20 +96,20 @@ class MyJob : JobService(){
             val channel = NotificationChannel(NOTIF_CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
-            // Register the channel with the system
+
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
 
-    private fun showNotification() {
+    private fun showNotification(p:Double) {
         val intent = Intent(this,BitCoinPrice::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
         val builder = NotificationCompat.Builder(this, NOTIF_CHANNEL_ID)
             .setContentTitle("ILoveZappos")
-            .setContentText("The price of Bit Coin has dropped")
+            .setContentText("The price of Bit Coin has dropped to $p")
             .setSmallIcon(android.R.drawable.btn_default)
             .setAutoCancel(false)
             .setContentIntent(pendingIntent)
@@ -125,8 +125,6 @@ class MyJob : JobService(){
 
     override fun onCreate() {
         super.onCreate()
-
-        //Toast.makeText(this, "JobService created!", Toast.LENGTH_SHORT).show()
         createNotificationChannel()
     }
 
