@@ -51,7 +51,6 @@ class BitCoinPrice : AppCompatActivity(), IUserControl {
                 val body = response?.body()?.string()
                 val price:String
 
-                println(body)
                 price = body.toString()
                 var high = (price.substring(price.indexOf("high"), price.indexOf("last")))
                 var last = (price.substring(price.indexOf("last"), price.indexOf("timestamp")))
@@ -142,7 +141,7 @@ class BitCoinPrice : AppCompatActivity(), IUserControl {
                 .build()
             val success = scheduler.schedule(jobInfo)
             if(success == JobScheduler.RESULT_SUCCESS) {
-                Toast.makeText(this, "Job scheduling succeeded", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Alert succeeded", Toast.LENGTH_SHORT).show()
             }
 
         }

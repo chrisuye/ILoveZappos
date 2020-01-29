@@ -1,28 +1,25 @@
 package com.christian.seyoum.ilovezappos
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import kotlinx.android.synthetic.main.activity_ask_bid.*
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import org.json.JSONArray
 import java.io.IOException
 
+
 class MainActivity : AppCompatActivity() {
 
     var cryptoData: String? = ""
-
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,50 +32,19 @@ class MainActivity : AppCompatActivity() {
         val client = OkHttpClient()
 
 
-                client.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        println("not tre")
-                    }
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                println("Network failed")
+            }
+            override fun onResponse(call: Call, response: Response) {
+                val body = response?.body()?.string()
+                cryptoData = body.toString()
+                val jsonArray = JSONArray(cryptoData)
+                createGraph(jsonArray)
+            }
 
-                    override fun onResponse(call: Call, response: Response) {
-                        val body = response?.body()?.string()
-                        println(body)
+        })
 
-
-                        val yValue: ArrayList<Entry> = arrayListOf()
-                        cryptoData = body.toString()
-                        val jsonArray = JSONArray(cryptoData)
-                        var i = 0
-                        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                        var date = java.util.Date(1532358895 * 1000)
-                        sdf.format(date)
-                        while (i < jsonArray.length()) {
-                            date = java.util.Date(jsonArray.getJSONObject(i).getString("date").toLong())
-                            yValue.add(
-                                Entry(
-                                    jsonArray.getJSONObject(i).getString("date").toFloat()
-                                    , jsonArray.getJSONObject(i).getString("price").toFloat()
-                                )
-                            )
-                            i++
-                        }
-                        yValue.reverse()
-                        graph.isDragEnabled = true
-                        graph.isScaleXEnabled = false
-                        val set = LineDataSet(yValue, "Cryptocurrency Graph")
-                        set.fillAlpha = 0
-                        val dataset: ArrayList<ILineDataSet> = arrayListOf()
-
-                        dataset.add(set)
-
-                        val Data = LineData(dataset)
-                        graph.data = Data
-
-                        graph.notifyDataSetChanged()
-                        graph.invalidate()
-                    }
-
-                })
 
 
     }
@@ -108,4 +74,56 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    fun createGraph(jsonArray:JSONArray){
+        var i = 0
+        val yValue: ArrayList<Entry> = arrayListOf()
+        val xAxis = graph.xAxis
+        while (i < jsonArray.length()) {
+
+            yValue.add(
+                Entry(
+                    jsonArray.getJSONObject(i).getString("date").toFloat()
+                    , jsonArray.getJSONObject(i).getString("price").toFloat()
+                )
+            )
+            i++
+        }
+        yValue.reverse()
+
+        xAxis.valueFormatter = (MyValueFormatter())
+
+
+
+        val set = LineDataSet(yValue, "Cryptocurrency Graph")
+        set.fillAlpha = 0
+        val dataset: ArrayList<ILineDataSet> = arrayListOf()
+        dataset.add(set)
+
+        val Data = LineData(set)
+        graph.isDragEnabled = true
+        graph.isScaleXEnabled = true
+        graph.setPinchZoom(true)
+        graph.setTouchEnabled(true)
+
+        graph.data = Data
+        graph.notifyDataSetChanged()
+        graph.invalidate()
+    }
+
 }
+
+class MyValueFormatter : ValueFormatter() {
+
+    override fun getFormattedValue(value: Float): String {
+        return value.toString()
+    }
+
+    override fun getAxisLabel(value: Float, axis: AxisBase): String {
+        return ("").toString()
+
+
+    }
+}
+
+

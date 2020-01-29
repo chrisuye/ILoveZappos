@@ -19,25 +19,22 @@ import kotlin.concurrent.thread
 
 class MyJob : JobService(){
     private val i = 0
+    private val hour:Long = 60 * 60 * 1000
 
     override fun onStopJob(job: JobParameters?): Boolean {
-        Toast.makeText(this, "Job stopped", Toast.LENGTH_SHORT).show()
+
         return false
     }
 
     override fun onStartJob(job: JobParameters?): Boolean {
 
-        Toast.makeText(this, "Received job request", Toast.LENGTH_SHORT).show()
-
         val p = job?.extras?.getDouble("price")
 
         thread {
 
-            println("Job received")
             try {
                 while (i == 0 ){
-                    Thread.sleep(5000)
-                    println("Job received running")
+                    Thread.sleep(hour)
                     val url = "https://www.bitstamp.net/api/v2/ticker_hour/btcusd/"
 
                     val request = Request.Builder().url(url).build()
@@ -53,28 +50,19 @@ class MyJob : JobService(){
                         override fun onResponse(call: Call, response: Response) {
                             val body = response?.body()?.string()
                             var price:String
-                            println(body)
+
                             price = body.toString()
                             price = price.substring(price.indexOf("last"), price.indexOf("timestamp"))
                             price = price.replace("\"","")
                             price = price.substring(price.indexOf(":") + 1, price.indexOf(","))
                             price = price.replace(" ","")
 
-                            println(price)
-                            if (p.toString().isEmpty()){
-                                println("price is empty")
-                            }
-                            else {
-                                println("Price by user $p")
+                            if (p.toString().isNotEmpty()){
                                 if(price.toDouble() < p.toString().toDouble()){
 
-                                    showNotification(price.toDouble())
-
-
+                                    showNotification(price.toDouble(), p.toString().toDouble())
                                 }
                             }
-
-
 
                         }
 
@@ -103,13 +91,15 @@ class MyJob : JobService(){
         }
     }
 
-    private fun showNotification(p:Double) {
+    private fun showNotification(price:Double, p:Double) {
+
+        val dif = "%.2f".format(p - price).toDouble()
         val intent = Intent(this,BitCoinPrice::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
         val builder = NotificationCompat.Builder(this, NOTIF_CHANNEL_ID)
             .setContentTitle("ILoveZappos")
-            .setContentText("The price of Bit Coin has dropped to $p")
+            .setContentText("The price of BitCoin has dropped by $dif to current low price of $price")
             .setSmallIcon(android.R.drawable.btn_default)
             .setAutoCancel(false)
             .setContentIntent(pendingIntent)

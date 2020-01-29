@@ -28,6 +28,4 @@ class MainAdapter(val cryptoFormat: MutableList<CryptoFormat>): RecyclerView.Ada
 
 }
 
-class CustomViewHolder(val view: View): RecyclerView.ViewHolder(view) {
-
-}
+class CustomViewHolder(val view: View): RecyclerView.ViewHolder(view)
