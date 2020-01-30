@@ -8,6 +8,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -33,6 +34,11 @@ class BitCoinPrice : AppCompatActivity(), IUserControl {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bit_coin_price)
         users = UserRepo(this)
+        /*
+        using OKHttp to fetch json from the given url
+        for parsing we are not using a JSONArray bc tht failed. instead we are self parsing the information
+        then we will use runonUIthread to show the last price.
+         */
 
         val url = "https://www.bitstamp.net/api/v2/ticker_hour/btcusd/"
 
@@ -44,7 +50,7 @@ class BitCoinPrice : AppCompatActivity(), IUserControl {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                println("network fail")
+                Log.d("network","The Network is unstable")
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -52,76 +58,15 @@ class BitCoinPrice : AppCompatActivity(), IUserControl {
                 val price:String
 
                 price = body.toString()
-                var high = (price.substring(price.indexOf("high"), price.indexOf("last")))
                 var last = (price.substring(price.indexOf("last"), price.indexOf("timestamp")))
-                var bid = (price.substring(price.indexOf("bid"), price.indexOf("vwap")))
-                var vwap = (price.substring(price.indexOf("vwap"), price.indexOf("volume")))
-                var volume = (price.substring(price.indexOf("volume"), price.indexOf("low")))
-                var low = (price.substring(price.indexOf("low"), price.indexOf("ask")))
-                var ask = (price.substring(price.indexOf("ask"), price.indexOf("open")))
-                var open = (price.substring(price.indexOf("open"), price.indexOf("}")))
-
-                high = high.replace("\"","")
-                high = high.substring(high.indexOf(":") + 1, high.indexOf(","))
-                high = high.replace(" ","")
-
-
 
                 last = last.replace("\"","")
                 last = last.substring(last.indexOf(":") + 1, last.indexOf(","))
                 last = last.replace(" ","")
-
-
-
-                bid = bid.replace("\"","")
-                bid = bid.substring(bid.indexOf(":") + 1, bid.indexOf(","))
-                bid= bid.replace(" ","")
-
-
-
-                vwap = vwap.replace("\"","")
-                vwap = vwap.substring(vwap.indexOf(":") + 1, vwap.indexOf(","))
-                vwap= vwap.replace(" ","")
-
-
-
-                volume = volume.replace("\"","")
-                volume = volume.substring(volume.indexOf(":") + 1, volume.indexOf(","))
-                volume = volume.replace(" ","")
-
-
-
-                low = low.replace("\"","")
-                low = low.substring(low.indexOf(":") + 1, low.indexOf(","))
-                low = low.replace(" ","")
-
-
-
-                ask = ask.replace("\"","")
-                ask = ask.substring(ask.indexOf(":") + 1, ask.indexOf(","))
-                ask = ask.replace(" ","")
-
-
-
-                open = open.replace("\"","")
-                open = open.substring(open.indexOf(":") + 1, open.length )
-                open = open.replace(" ","")
-
-
-
                 runOnUiThread {
-
-                    high_view.text = high
-                    open_view.text = open
-                    a_view.text = ask
-                    low_view.text = low
-                    volume_view.text = volume
-                    vwap_view.text = vwap
-                    b_view.text = bid
-                    last_view.text = last
+                    last_view.text = "The curent price of Bitcoin is $last. \n" +
+                            "Set an Alert below to check the price of Bitcoin by the hour"
                 }
-
-
 
             }
 
@@ -156,6 +101,10 @@ class BitCoinPrice : AppCompatActivity(), IUserControl {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        /*
+        menu buttons to move to other activities and refresh activity in order to get the most
+        current data. refresh will cloth the current activity and reload it.
+         */
 
         when(item.itemId){
             R.id.graph_menu -> {
@@ -166,6 +115,11 @@ class BitCoinPrice : AppCompatActivity(), IUserControl {
             R.id.ask_bid_menu -> {
                 val intent = Intent(this, AskBid::class.java)
                 startActivity(intent)
+                return true
+            }
+            R.id.refresh_price -> {
+                finish()
+                startActivity(getIntent())
                 return true
             }
 

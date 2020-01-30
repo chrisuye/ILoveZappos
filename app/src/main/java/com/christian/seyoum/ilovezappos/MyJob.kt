@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import okhttp3.*
@@ -18,6 +17,11 @@ import kotlin.concurrent.thread
 
 
 class MyJob : JobService(){
+    /*
+    This is the jobService for my notification of price changed.
+    we are using i to create an endless loop that runs every hour in the background
+    when we notice that price has dropped a notification will be sent to the user
+     */
     private val i = 0
     private val hour:Long = 60 * 60 * 1000
 
@@ -44,7 +48,7 @@ class MyJob : JobService(){
 
                     client.newCall(request).enqueue(object : Callback {
                         override fun onFailure(call: Call, e: IOException) {
-                            println("network fail")
+                            Log.d("network","The Network is unstable")
                         }
 
                         override fun onResponse(call: Call, response: Response) {

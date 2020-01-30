@@ -6,3 +6,6 @@ interface IUserControl {
 
     val users:IUserRepo
 }
+/*
+interface is using in BitCoinPrice to get access to the SQlite database
+ */

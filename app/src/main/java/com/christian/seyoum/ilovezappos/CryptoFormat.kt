@@ -6,3 +6,7 @@ data class CryptoFormat(
     val ask:String,
     val askAmount:String
 )
+
+/*
+data class to manage and organize data for the recycler view
+ */

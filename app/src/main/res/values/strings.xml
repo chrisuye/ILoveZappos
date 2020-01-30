@@ -13,4 +13,8 @@
     <string name="low">Low = </string>
     <string name="alarm">CREATE ALERT</string>
     <string name="price_hint">Set Price</string>
+    <string name="graph">Graph</string>
+    <string name="ask_bid">Ask and Bid</string>
+    <string name="set_price">Set Price Alert</string>
+    <string name="refresh">Refresh</string>
 </resources>

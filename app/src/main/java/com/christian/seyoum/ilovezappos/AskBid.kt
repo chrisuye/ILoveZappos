@@ -3,22 +3,20 @@ package com.christian.seyoum.ilovezappos
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import kotlinx.android.synthetic.main.activity_ask_bid.*
-import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
-import org.json.JSONArray
-import org.json.JSONException
 import java.io.IOException
 
 class AskBid : AppCompatActivity() {
-
+    /*
+        using OKHttp to fetch json from the given url
+        for parsing we are not using a JSONArray bc tht failed. instead we are self parsing the information
+        then we will use runonUIthread to populate the recyclerview.
+         */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +32,7 @@ class AskBid : AppCompatActivity() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                println("network fail")
+                Log.d("network","The Network is unstable")
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -121,6 +119,10 @@ class AskBid : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        /*
+        menu buttons to move to other activities and refresh activity in order to get the most
+        current data. refresh will cloth the current activity and reload it.
+         */
 
         when(item.itemId){
             R.id.graph_menu -> {
@@ -131,6 +133,11 @@ class AskBid : AppCompatActivity() {
             R.id.price_menu -> {
                 val intent = Intent(this,BitCoinPrice::class.java)
                 startActivity(intent)
+                return true
+            }
+            R.id.refresh_bid_ask -> {
+                finish()
+                startActivity(getIntent())
                 return true
             }
 

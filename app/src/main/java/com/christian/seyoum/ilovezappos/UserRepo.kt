@@ -2,6 +2,10 @@ package com.christian.seyoum.ilovezappos
 
 import android.content.Context
 
+/*
+this has the direct access to the SQLite data base.
+ */
+
 class UserRepo (context: Context):IUserRepo{
     private var prices:MutableList<User> = mutableListOf()
     private val db: IUserDataBase

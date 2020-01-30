@@ -3,12 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/refresh_main"
+        android:icon="@drawable/ic_cached_black_24dp"
+        android:title="@string/refresh"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/ask_bid_menu"
-        android:title="Ask and Bid"
+        android:title="@string/ask_bid"
         app:showAsAction="never"/>
     <item
         android:id="@+id/price_menu"
-        android:title="Set Price Alert"
+        android:title="@string/set_price"
         app:showAsAction="never"/>
 
 </menu>

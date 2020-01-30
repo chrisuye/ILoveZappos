@@ -6,6 +6,9 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 
+/*
+data base for price input
+ */
 object UserContract {
     object UserEntry : BaseColumns {
         const val TABLE_NAME = "foods"
